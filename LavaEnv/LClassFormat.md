@@ -2,6 +2,16 @@
 This markdown file describes the format of an `.lclass` file.<br>
 The file format of `.lclass` has a striking ressemblence of Java's `.class` file format.
 
+This spec file uses:<br>
+UI1: An unsigned integer of 8 bits (1 byte) length<br>
+UI2: An unsigned integer of 16 bits (2 bytes) length<br>
+UI4: An unsigned integer of 32 bits (4 bytes) length<br>
+UI8: An unsigned integer of 64 bits (8 bytes) length<br>
+I1: A signed integer of 8 bits (1 byte) lebgth<br>
+I2: A signed integer of 16 bits (2 byte) lebgth<br>
+I4: A signed integer of 32 bits (4 byte) lebgth<br>
+I8: A signed integer of 64 bits (8 byte) lebgth
+
 ## Header
 The header is very tiny as it only describes the file as being an lclass file and what version of the file format it is.<br>
 As this allows breaking the file format afterwards to allow better file formats in the future.
