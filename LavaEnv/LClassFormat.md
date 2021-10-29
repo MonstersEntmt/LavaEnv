@@ -52,7 +52,7 @@ UI2[**superCount**] **supers**: The supers of this class.<br>
 UI2 **fieldCount**: The number of fields in this class.<br>
 Field[**fieldCount**] **fields**: The fields of this class.<br>
 UI2 **methodCount**: The number of methods in this class.<br>
-Method[**methodCount**]: The methods of this class.<br>
+Method[**methodCount**] **methods**: The methods of this class.<br>
 UI2 **attributeCount**: The number of attributes in this class.<br>
 Attribute[**attributeCount**] **attributes**: The attributes of this class.
 
