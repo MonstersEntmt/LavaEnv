@@ -29,6 +29,7 @@ workspace("Lava")
 		
 	filter("system:windows")
 		defines({ "LAVA_SYSTEM=LAVA_SYSTEM_WINDOWS" })
+		toolset("clang")
 		
 	filter("system:macosx")
 		defines({ "LAVA_SYSTEM=LAVA_SYSTEM_MACOSX" })
@@ -59,7 +60,7 @@ workspace("Lava")
 		kind("StaticLib")
 		location("%{wks.location}/LavaEnv/")
 		targetdir("%{wks.location}/Bin/%{cfg.system}-%{cfg.buildcfg}-%{cfg.platform}/")
-		objdir("%{wks.location}Bin/Int-%{cfg.system}-%{cfg.buildcfg}-%{cfg.platform}/%{prj.name}")
+		objdir("%{wks.location}/Bin/Int-%{cfg.system}-%{cfg.buildcfg}-%{cfg.platform}/%{prj.name}")
 		
 		includedirs({
 			"%{prj.location}/Source/",
@@ -81,7 +82,7 @@ workspace("Lava")
 		kind("ConsoleApp")
 		location("%{wks.location}/LavaTest/")
 		targetdir("%{wks.location}/Bin/%{cfg.system}-%{cfg.buildcfg}-%{cfg.platform}/")
-		objdir("%{wks.location}Bin/Int-%{cfg.system}-%{cfg.buildcfg}-%{cfg.platform}/%{prj.name}")
+		objdir("%{wks.location}/Bin/Int-%{cfg.system}-%{cfg.buildcfg}-%{cfg.platform}/%{prj.name}")
 		
 		links({ "LavaEnv" })
 		sysincludedirs({ "%{wks.location}/LavaEnv/Include/" })

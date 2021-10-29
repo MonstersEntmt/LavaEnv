@@ -148,7 +148,7 @@ namespace Core {
 } // namespace Core
 
 #if LAVA_IS_PLATFORM_X86
-	#warn X86 is very buggy and might not work to its fullest potential.
+	#warning "X86 is very buggy and might not work to its fullest potential."
 	#if LAVA_IS_TOOLSET_MSVC
 		#define LAVA_CALL_CONV __stdcall
 	#elif LAVA_IS_TOOLSET_GCC || LAVA_IS_TOOLSET_CLANG
@@ -158,6 +158,7 @@ namespace Core {
 		#error The given toolset isn't supported for platform X86, please use either msvc, gcc or clang
 	#endif
 #elif LAVA_IS_PLATFORM_AMD64
+	#warning "I might switch to ms_abi both for compatibility with msvc, though I doubt that I would."
 	#if LAVA_IS_TOOLSET_MSVC
 		#define LAVA_CALL_CONV __declspec(sysv_abi)
 		#error MSVC Currently isn't supported for AMD64 as this requires the use of SystemV AMD64 ABI calling convention which MSVC sadly doesnt support.
