@@ -20,70 +20,93 @@ And the capital letters **I**, **B**, **L** and **U** are:
 | Char | Description |
 | :---: | --- |
 | **I** | Integer |
-| **B** | Big endianess |
-| **L** | Little endianess |
+| **B** | Big endian |
+| **L** | Little endian |
 | **U** | Unsigned |
 
 ## Header
 The header is very tiny as it only describes the file as being an lclass file and what version of the file format it is.  
 As this allows breaking the file format afterwards to allow better file formats in the future.
 
-UI4 **magicNumber**: The magic number of the lclass file format, it's value should always equal the string "**HOTL**" for Hot Lava  
-UI2 **formatVersion**: The version of the lclass file format, should be the value 1 for the version described here.
+| Offset | Type | Name | Description |
+| :---: | :---: | --- | --- |
+| **0** | **LUI4** | **magicNumber** | The magic number of the lclass file format, it's value should always equal the string "**HOTL**" for Hot Lava. |
+| **4** | **LUI2** | **formatVersion** | The version of the lclass file format, should be the value 1 for the version described here. |
+| **6** | **LUI1** | **endianess** | The endianess of all integer types that don't specify their endianess in this lclass file.<br>*(0 is little endian, 1 is big endian)* |
 
 ## Constant Pool
 The constant pool is a list of constant values to be used when parsing and linking the file.
 
-UI2 **size**: The number of constants in the constant pool + 1.  
-ConstantPoolEntry[**size**-1] **entries**: The entries in the constant pool.
+| Offset | Type | Name | Description |
+| :---: | :---: | --- | --- |
+| **0** | **UI2** | **size** | The number of constants in the constant pool pluss 1. |
+| **2** | **ConstantPoolEntry\[size-1]** | **entries** | The entries in the constant pool. |
 
 ## Constant Pool Entry
-There are a couple of constant pool entry types, all of which have the data below.  
-The list of types are:
-- **CLASS**: 1
-- **UTF8**: 2
+There are a couple of constant pool entry types, all of which start with the data below.
 
-UI1 **tag**: The tag of the constant pool entry
+| Offset | Type | Name | Description |
+| :---: | :---: | --- | --- |
+| **0** | **UI1** | **tag** | A tag identifier for the constant pool entry. |
 
-For **CLASS**, **tag** has to be 1 and has the extra data below.
+### **CLASS** Entry
+A Class entry describes a class.  
+**tag** = 1
 
-UI2 **nameIndex**: An index to a **UTF8** constant pool entry used to describe the name of the class.
+| Offset | Type | Name | Description |
+| :---: | :---: | --- | --- |
+| **1** | **UI2** | **nameEntry** | A **UTF8** entry in this constant pool which describes the name of this class entry. |
 
-For **UTF8**, **tag** has to be 2 and has the extra data below.
+### **UTF8** Entry
+A UTF8 entry describes a UTF-8 encoded string.
+**tag** = 2
 
-UI4 **length**: The length of the UTF8 encoded string.  
-UI1[**length**] **string**: The actual string.
+| Offset | Type | Name | Description |
+| :---: | :---: | --- | --- |
+| **1** | **UI4** | **length** | The length of this UTF-8 encoded string. |
+| **5** | **UI1\[length]** | **string** | The actual string. |
 
 ## Class Information
 The class information stores necessary information about the class.
 
-UI2 **classFlags**: Flags describing this class.  
-UI2 **classEntry**: **CLASS** entry in the constant pool of this class.  
-UI2 **superCount**: The number of super classes.  
-UI2[**superCount**] **supers**: The supers of this class.  
-UI2 **fieldCount**: The number of fields in this class.  
-Field[**fieldCount**] **fields**: The fields of this class.  
-UI2 **methodCount**: The number of methods in this class.  
-Method[**methodCount**] **methods**: The methods of this class.  
-UI2 **attributeCount**: The number of attributes in this class.  
-Attribute[**attributeCount**] **attributes**: The attributes of this class.
+| Offset | Type | Name | Description |
+| :---: | :---: | --- | --- |
+| **0** | **UI2** | **classFlags** | Flags describing this class. |
+| **2** | **UI2** | **flags** | A **CLASS* entry in the constant pool which describes this class. |
+| **4** | **UI2** | **superCount** | The number of super classes. |
+| **6** | **UI2\[superCount]** | **supers** | The supers of this class. |
+| **?** | **UI2** | **fieldCount** | The number of fields in this class. |
+| **?** | **Field\[fieldCount]** | **fields** | The fields of this class. |
+| **?** | **UI2** | **methodCount** | The number of methods in this class. |
+| **?** | **Method\[methodCount]** | **methods** | The methods of this class. |
+| **?** | **UI2** | **attributeCount** | The number of attributes in this class. |
+| **?** | **Attribute\[attributeCount]** | **attibutes** | The attributes of this class. |
 
 ## Field
+The field struct stores necessary information about a field in the class.
 
-UI2 **flags**: Flags describing this field.  
-UI2 **idEntry**: **UTF8** entry in the constant pool describing the id of this field.  
-UI2 **attributeCount**: The number of attributes in this field.  
-Attribute[**attributeCount**] **attributes**: The attributes of this field.
+| Offset | Type | Name | Description |
+| :---: | :---: | --- | --- |
+| **0** | **UI2** | **flags** | Flags describing this field. |
+| **2** | **UI2** | **idEntry** | A **UTF8** entry in the constant pool which describes this field's id. |
+| **4** | **UI2** | **attributeCount** | The number of attributes in this field. |
+| **6** | **Attribute\[attributeCount]** | **attibutes** | The attributes of this field. |
 
 ## Method
+The method struct stores necessary information about a method in the class.
 
-UI2 **flags**: Flags describing this field.  
-UI2 **idEntry**: **UTF8** entry in the constant pool describing the id of this method.  
-UI2 **attributeCount**: The number of attributes in this method.  
-Attribute[**attributeCount**] **attributes**: The attributes of this method.
+| Offset | Type | Name | Description |
+| :---: | :---: | --- | --- |
+| **0** | **UI2** | **flags** | Flags describing this field. |
+| **2** | **UI2** | **idEntry** | A **UTF8** entry in the constant pool which describes this method's id. |
+| **4** | **UI2** | **attributeCount** | The number of attributes in this method. |
+| **6** | **Attribute\[attributeCount]** | **attibutes** | The attributes of this method. |
 
 ## Attribute
+The attribute struct stores ncessary information about an attribute in the class, field or method.
 
-UI2 **nameEntry**: **UTF8** entry in the constant pool describing the name of this attribute.  
-UI4 **attributeLength**: The length of this attribute.  
-UI1[**attributeLength**] **data**: The data of this attribute.
+| Offset | Type | Name | Description |
+| :---: | :---: | --- | --- |
+| **0** | **UI2** | **nameEntry** | A **UTF8** entry in the constant pool which describes this attribute's name |
+| **2** | **UI4** | **attributeLength** | The length of this attribute. |
+| **6** | **UI1\[attributeLength]** | **data** | The data of this attribute. |
