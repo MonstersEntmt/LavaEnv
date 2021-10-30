@@ -23,10 +23,12 @@ LAVA_CALL_CONV void testDtor(LavaEnv::Object* object) {
 }
 
 LAVA_CALL_CONV std::int32_t add(LavaEnv::Object* object, std::int32_t b) {
+	std::cout << "test add" << std::endl;
 	return object->get<std::int32_t>("a;I4") + b;
 }
 
 LAVA_CALL_CONV std::int32_t Add(std::int32_t a, std::int32_t b) {
+	std::cout << "test Add" << std::endl;
 	return a + b;
 }
 
@@ -35,52 +37,54 @@ LAVA_CALL_CONV int lavaMain(int argc, char** argv) {
 		LavaEnv::ClassRegistry registry;
 		LavaEnv::Class* testClass;
 		{
-			LavaEnv::RegisterClass registerTestClass;
-			registerTestClass.m_Id = "Test";
-
-			LavaEnv::RegisterField registerAField;
-			registerAField.m_Id = "a;I4";
-			registerTestClass.m_Fields.push_back(registerAField);
-
-			LavaEnv::RegisterField registerStaticAField;
-			registerStaticAField.m_Flags = LavaEnv::EFieldFlag::Static;
-			registerStaticAField.m_Id    = "A;I4";
-			registerTestClass.m_Fields.push_back(registerStaticAField);
-
-			LavaEnv::RegisterMethod registerSctorMethod;
-			registerSctorMethod.m_Flags       = LavaEnv::EMethodFlag::Static;
-			registerSctorMethod.m_Id          = "_sctor;()V";
-			registerSctorMethod.m_FunctionPtr = &testSctor;
-			registerTestClass.m_Methods.push_back(registerSctorMethod);
-
-			LavaEnv::RegisterMethod registerSdtorMethod;
-			registerSdtorMethod.m_Flags       = LavaEnv::EMethodFlag::Static;
-			registerSdtorMethod.m_Id          = "_sdtor;()V";
-			registerSdtorMethod.m_FunctionPtr = &testSdtor;
-			registerTestClass.m_Methods.push_back(registerSdtorMethod);
-
-			LavaEnv::RegisterMethod registerCtorMethod;
-			registerCtorMethod.m_Id          = "_ctor;(LTest;)V";
-			registerCtorMethod.m_FunctionPtr = &testCtor;
-			registerTestClass.m_Methods.push_back(registerCtorMethod);
-
-			LavaEnv::RegisterMethod registerDtorMethod;
-			registerDtorMethod.m_Id          = "_dtor;(LTest;)V";
-			registerDtorMethod.m_FunctionPtr = &testDtor;
-			registerTestClass.m_Methods.push_back(registerDtorMethod);
-
-			LavaEnv::RegisterMethod registerAddMethod;
-			registerAddMethod.m_Id          = "add;(I4)I4";
-			registerAddMethod.m_FunctionPtr = &add;
-			registerTestClass.m_Methods.push_back(registerAddMethod);
-
-			LavaEnv::RegisterMethod registerStaticAddMethod;
-			registerStaticAddMethod.m_Flags       = LavaEnv::EMethodFlag::Static;
-			registerStaticAddMethod.m_Id          = "Add;(I4,I4)I4";
-			registerStaticAddMethod.m_FunctionPtr = &Add;
-			registerTestClass.m_Methods.push_back(registerStaticAddMethod);
-
-			testClass = registry.registerClass(std::move(registerTestClass));
+			using namespace LavaEnv;
+			testClass = registry.registerClass(RegisterClass {
+			    EClassFlag::None,
+			    "Test",
+			    {},
+			    {
+			        RegisterMethod {
+			            EMethodFlag::Static,
+			            "_sctor;()V",
+			            &testSctor,
+			        },
+			        RegisterMethod {
+			            EMethodFlag::Static,
+			            "_sdtor;()V",
+			            &testSdtor,
+			        },
+			        RegisterMethod {
+			            EMethodFlag::Static,
+			            "Add;(I4,I4)I4",
+			            &Add,
+			        },
+			        RegisterMethod {
+			            EMethodFlag::None,
+			            "_ctor;(LTest;)V",
+			            &testCtor,
+			        },
+			        RegisterMethod {
+			            EMethodFlag::None,
+			            "_dtor;(LTest;)V",
+			            &testDtor,
+			        },
+			        RegisterMethod {
+			            EMethodFlag::None,
+			            "add;(I4)I4",
+			            &add,
+			        },
+			    },
+			    {
+			        RegisterField {
+			            EFieldFlag::Static,
+			            "A;I4",
+			        },
+			        RegisterField {
+			            EFieldFlag::None,
+			            "a;I4",
+			        },
+			    },
+			});
 		}
 		if (!testClass)
 			throw std::runtime_error("Failed to register class!");
@@ -88,12 +92,10 @@ LAVA_CALL_CONV int lavaMain(int argc, char** argv) {
 		LavaEnv::Object* object = testClass->instantiate();
 		// object->set<std::int32_t>("a", 10);
 		std::int32_t result = object->invoke<std::int32_t>("add;(I4)I4", 5);
-		std::cout << result << std::endl;
 		object->destroy();
 
 		result = testClass->invokeStatic<std::int32_t, std::int32_t, std::int32_t>("Add;(I4,I4)I4", 10, 5);
-		std::cout << result << std::endl;
-		return EXIT_SUCCESS;
+		return result;
 	} catch (const std::exception& e) {
 		std::cout << e.what() << std::endl;
 		return EXIT_FAILURE;
