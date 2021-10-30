@@ -66,6 +66,9 @@ Type = **UI2**
 | :---: | --- | --- |
 | **0** | **None** | No flags. |
 
+### **Class id format**
+The format of a Class id is a case-sensitive [unix path](https://en.wikipedia.org/wiki/Path_(computing)#Unix_style).
+
 ## Constant Pool
 The constant pool is a list of constant values to be used when parsing and linking the file.
 
@@ -111,6 +114,25 @@ The field struct stores necessary information about a field in the class.
 The attributes of this field can (All others are ignored) be one of the following.
 1. **[ConstantValue Attribute](#constantvalue-attribute)**
 
+### **Field id format**
+The format of a Field id is:
+```
+FieldId:
+  FieldName ; FieldType
+
+FieldType:
+  PrimitiveType
+  ClassType
+
+PrimitiveType:
+  (one of)
+  I1, I2, I4, I8, UI1, UI2, UI4, UI8, C1, C2, C4, F, D
+
+ClassType:
+  L ClassId ;
+```
+FieldName represents a string with at least one character and must not contain any of the ASCII characters `.` `;` `[` `/`.
+
 ### **EFieldFlags**
 Type = **UI2**
 | Value | Name | Description |
@@ -130,6 +152,32 @@ The method struct stores necessary information about a method in the class.
 
 The attributes of this method can (All others are ignored) be one of the following.
 1. **[Code Attribute](#code-attribute)**
+
+### **Method id format**
+The format of a Method id is:
+```
+MethodId:
+  MethodName ; ( {FieldType} ) ReturnType
+
+FieldType:
+  PrimitiveType
+  ClassType
+
+ReturnType:
+  FieldType
+  VoidType
+
+PrimitiveType:
+  (one of)
+  I1, I2, I4, I8, UI1, UI2, UI4, UI8, C1, C2, C4, F, D
+
+ClassType:
+  L ClassId ;
+
+VoidType:
+  V
+```
+MethodName represents a string with at least one character and must not contain any of the ASCII characters `.` `;` `[` `/`.
 
 ### **EMethodFlags**
 Type = **UI2**
