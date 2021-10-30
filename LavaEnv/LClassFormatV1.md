@@ -126,7 +126,7 @@ FieldType:
 
 PrimitiveType:
   (one of)
-  I1, I2, I4, I8, UI1, UI2, UI4, UI8, C1, C2, C4, F, D
+  I1, I2, I4, I8, UI1, UI2, UI4, UI8, C1, C2, C4, F4, F8
 
 ClassType:
   L ClassId ;
@@ -169,7 +169,7 @@ ReturnType:
 
 PrimitiveType:
   (one of)
-  I1, I2, I4, I8, UI1, UI2, UI4, UI8, C1, C2, C4, F, D
+  I1, I2, I4, I8, UI1, UI2, UI4, UI8, C1, C2, C4, F4, F8
 
 ClassType:
   L ClassId ;
