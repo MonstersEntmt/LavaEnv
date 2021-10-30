@@ -157,7 +157,9 @@ The attributes of this method can (All others are ignored) be one of the followi
 The format of a Method id is:
 ```
 MethodId:
-  MethodName ; ( {FieldType} ) ReturnType
+  MethodName ; ( ) ReturnType
+  MethodName ; ( FieldType ) ReturnType
+  MethodName ; ( FieldType {, FieldType} ) ReturnType
 
 FieldType:
   PrimitiveType
