@@ -2,27 +2,31 @@
 
 #include "Utility.h"
 
+#include <string_view>
+
 namespace LavaEnv {
 	struct Class;
+	class ClassRegistry;
 
 	enum class EPrimitiveType : std::uint32_t {
-		Int8   = 0,
-		Int16  = 1,
-		Int32  = 2,
-		Int64  = 3,
-		UInt8  = 4,
-		UInt16 = 5,
-		UInt32 = 6,
-		UInt64 = 7,
-		Char8  = 8,
-		Char16 = 9,
-		Char32 = 10,
-		Float  = 11,
-		Double = 12,
-		None   = ~0U
+		Int8    = 0x00'00'00'00U,
+		Int16   = 0x00'00'00'01U,
+		Int32   = 0x00'00'00'02U,
+		Int64   = 0x00'00'00'03U,
+		UInt8   = 0x00'00'01'00U,
+		UInt16  = 0x00'00'01'01U,
+		UInt32  = 0x00'00'01'02U,
+		UInt64  = 0x00'00'01'03U,
+		Char8   = 0x00'00'02'00U,
+		Char16  = 0x00'00'02'01U,
+		Char32  = 0x00'00'02'02U,
+		Float32 = 0x00'00'03'00U,
+		Float64 = 0x00'00'03'01U,
+		Void    = 0xFF'FF'FF'FEU,
+		None    = 0xFF'FF'FF'FFU
 	};
 
-	std::size_t getSizeOfPrimitiveType(EPrimitiveType primitiveType);
+	LAVA_CALL_CONV std::size_t getSizeOfPrimitiveType(EPrimitiveType primitiveType);
 
 	struct Type {
 	public:
@@ -40,4 +44,6 @@ namespace LavaEnv {
 		Class* m_Class;
 		EPrimitiveType m_PrimitiveType;
 	};
+
+	LAVA_CALL_CONV Type parseType(ClassRegistry& registry, std::string_view typeString);
 } // namespace LavaEnv

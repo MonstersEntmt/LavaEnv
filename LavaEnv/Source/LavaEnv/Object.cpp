@@ -3,6 +3,6 @@
 
 namespace LavaEnv {
 	LAVA_CALL_CONV void Object::destroy() {
-		m_Class->destroy(this);
+		m_Class.destroy(this);
 	}
 } // namespace LavaEnv

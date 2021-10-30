@@ -14,9 +14,14 @@
 #include <vector>
 
 namespace LavaEnv {
+	class ClassRegistry;
+
 	struct Class {
 	public:
-		Class(RegisterClass&& clazz);
+		friend ClassRegistry;
+
+	public:
+		Class(ClassRegistry& registry);
 
 		template <class R, class... Params>
 		LAVA_CALL_CONV R invokeStatic(std::string_view id, Params... args);
@@ -40,6 +45,9 @@ namespace LavaEnv {
 		LAVA_CALL_CONV Field* getField(std::string_view id) const;
 		LAVA_CALL_CONV Field* getFieldC(const char* id) const { return getField(id); }
 
+		LAVA_CALL_CONV auto& getRegistry() { return m_Registry; }
+		LAVA_CALL_CONV auto& getRegistry() const { return m_Registry; }
+
 		LAVA_CALL_CONV auto getFlags() const { return m_Flags; }
 		LAVA_CALL_CONV auto& getId() const { return m_Id; }
 		LAVA_CALL_CONV auto& getSupers() const { return m_Supers; }
@@ -52,6 +60,11 @@ namespace LavaEnv {
 		LAVA_CALL_CONV auto& getStaticData() const { return m_StaticData; }
 
 	private:
+		LAVA_CALL_CONV void setup(RegisterClass&& clazz);
+
+	private:
+		ClassRegistry& m_Registry;
+
 		EClassFlags m_Flags;
 		std::string m_Id;
 		std::vector<Class*> m_Supers;

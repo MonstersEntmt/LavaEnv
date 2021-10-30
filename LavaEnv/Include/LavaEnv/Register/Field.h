@@ -15,6 +15,5 @@ namespace LavaEnv {
 	public:
 		EFieldFlags m_Flags;
 		std::string m_Id;
-		Type m_Type;
 	};
 } // namespace LavaEnv

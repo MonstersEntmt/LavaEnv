@@ -8,7 +8,7 @@ namespace LavaEnv {
 	LAVA_CALL_CONV T& Field::getStatic() {
 		if (!(m_Flags & EFieldFlag::Static))
 			throw std::runtime_error("Field '" + m_Id + "' is not static");
-		return *reinterpret_cast<T*>(m_Class->getStaticData().data() + m_Offset);
+		return *reinterpret_cast<T*>(m_Class.getStaticData().data() + m_Offset);
 	}
 
 	template <class T>
