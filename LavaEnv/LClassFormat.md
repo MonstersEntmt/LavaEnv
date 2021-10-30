@@ -2,6 +2,7 @@
 This markdown file describes the format of an `.lclass` file.  
 The file format of `.lclass` has a striking ressemblence of Java's `.class` file format.
 
+## Used Types
 This spec file uses the following types:
 | Type | Bytes |
 | :---: | :---: |
@@ -32,8 +33,15 @@ As this allows breaking the file format afterwards to allow better file formats 
 | :---: | --- | --- |
 | **LUI4** | **magicNumber** | The magic number of the lclass file format, it's value should always equal the string "**HOTL**" for Hot Lava. |
 | **LUI2** | **formatVersion** | The version of the lclass file format, should be the value 1 for the version described here. |
-| **LUI1** | **endianess** | The endianess of all integer types that don't specify their endianess in this lclass file.<br>*(0 is little endian, 1 is big endian)* |
+| **[EEndianess](#eendianess)** | **endianess** | The endianess of all integer types that don't specify their endianess in this lclass file. |
 | **[Body](#body)** | **body** | The body of the file. |
+
+### **EEndianess**
+Type = **LUI1**
+| Value | Name | Description |
+| :---: | --- | --- |
+| **0** | **Little** | Little endian |
+| **1** | **Big** | Big endian |
 
 ## Body
 The body is the large part of the file as it describes the necessary information about the class.
@@ -41,7 +49,7 @@ The body is the large part of the file as it describes the necessary information
 | Type | Name | Description |
 | :---: | --- | --- |
 | **[ConstantPool](#constant-pool)** | **constantPool** | The constant pool of the file. |
-| **UI2** | **classFlags** | Flags describing this class. |
+| **[EClassFlags](#eclassflags)** | **classFlags** | Flags describing this class. |
 | **UI2** | **flags** | A **[CLASS](#class-entry)* entry in the constant pool which describes this class. |
 | **UI2** | **superCount** | The number of super classes. |
 | **UI2\[superCount]** | **supers** | The supers of this class. |
@@ -51,6 +59,12 @@ The body is the large part of the file as it describes the necessary information
 | **[Method](#method)\[methodCount]** | **methods** | The methods of this class. |
 | **UI2** | **attributeCount** | The number of attributes in this class. |
 | **[Attribute](#attribute)\[attributeCount]** | **attibutes** | The attributes of this class. |
+
+### **EClassFlags**
+Type = **UI2**
+| Value | Name | Description |
+| :---: | --- | --- |
+| **0** | **None** | No flags. |
 
 ## Constant Pool
 The constant pool is a list of constant values to be used when parsing and linking the file.
@@ -89,7 +103,7 @@ The field struct stores necessary information about a field in the class.
 
 | Type | Name | Description |
 | :---: | --- | --- |
-| **UI2** | **flags** | Flags describing this field. |
+| **[EFieldFlags](#efieldflags)** | **flags** | Flags describing this field. |
 | **UI2** | **idEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes this field's id. |
 | **UI2** | **attributeCount** | The number of attributes in this field. |
 | **[Attribute](#attribute)\[attributeCount]** | **attibutes** | The attributes of this field. |
@@ -97,18 +111,32 @@ The field struct stores necessary information about a field in the class.
 The attributes of this field can (All others are ignored) be one of the following.
 1. **[ConstantValue Attribute](#constantvalue-attribute)**
 
+### **EFieldFlags**
+Type = **UI2**
+| Value | Name | Description |
+| :---: | --- | --- |
+| **0** | **None** | No flags. |
+| **1** | **Static** | The field is static. |
+
 ## Method
 The method struct stores necessary information about a method in the class.
 
 | Type | Name | Description |
 | :---: | --- | --- |
-| **UI2** | **flags** | Flags describing this field. |
+| **[EMethodFlags](#emethodflags)** | **flags** | Flags describing this field. |
 | **UI2** | **idEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes this method's id. |
 | **UI2** | **attributeCount** | The number of attributes in this method. |
 | **[Attribute](#attribute)\[attributeCount]** | **attibutes** | The attributes of this method. |
 
 The attributes of this method can (All others are ignored) be one of the following.
 1. **[Code Attribute](#code-attribute)**
+
+### **EMethodFlags**
+Type = **UI2**
+| Value | Name | Description |
+| :---: | --- | --- |
+| **0** | **None** | No flags. |
+| **1** | **Static** | The field is static. |
 
 ## Attribute
 The attribute struct stores ncessary information about an attribute in the class, field or method.
