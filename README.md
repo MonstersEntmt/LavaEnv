@@ -7,4 +7,4 @@ The current LClass file format can be found [here](LavaEnv/LClassFormatV1.md)
 All versions:
 | Version | Link |
 | :---: | --- |
-| **1** | [V1](LavaEnv/LClassFormatV1.md) |
+| **1** | [LClassFormatV1](LavaEnv/LClassFormatV1.md) |
