@@ -158,10 +158,10 @@ namespace Core {
 		#error The given toolset isn't supported for platform X86, please use either msvc, gcc or clang
 	#endif
 #elif LAVA_IS_PLATFORM_AMD64
-	#warning "I might switch to ms_abi both for compatibility with msvc, though I doubt that I would."
+	#warning "I might switch to ms_abi for compatibility with msvc, though I doubt that I would."
 	#if LAVA_IS_TOOLSET_MSVC
 		#define LAVA_CALL_CONV __declspec(sysv_abi)
-		#error MSVC Currently isn't supported for AMD64 as this requires the use of SystemV AMD64 ABI calling convention which MSVC sadly doesnt support.
+		#error MSVC currently isn't supported for AMD64 as this requires the use of SystemV AMD64 ABI calling convention which MSVC sadly doesnt support.
 	#elif LAVA_IS_TOOLSET_GCC || LAVA_IS_TOOLSET_CLANG
 		#define LAVA_CALL_CONV __attribute__((sysv_abi))
 	#else

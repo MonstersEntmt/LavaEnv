@@ -3,25 +3,25 @@
 #include <iostream>
 #include <stdexcept>
 
-void testCtor(LavaEnv::Object* object) {
+LAVA_CALL_CONV void testCtor(LavaEnv::Object* object) {
 	std::cout << "test ctor" << std::endl;
 	LavaEnv::Class* clazz = object->getClass();
 	object->set<std::int32_t>("a", clazz->getStatic<std::int32_t>("A"));
 }
 
-void testDtor(LavaEnv::Object* object) {
+LAVA_CALL_CONV void testDtor(LavaEnv::Object* object) {
 	std::cout << "test dtor" << std::endl;
 }
 
-std::int32_t add(LavaEnv::Object* object, std::int32_t b) {
+LAVA_CALL_CONV std::int32_t add(LavaEnv::Object* object, std::int32_t b) {
 	return object->get<std::int32_t>("a") + b;
 }
 
-std::int32_t Add(std::int32_t a, std::int32_t b) {
+LAVA_CALL_CONV std::int32_t Add(std::int32_t a, std::int32_t b) {
 	return a + b;
 }
 
-int main(int argc, char** argv) {
+LAVA_CALL_CONV int lavaMain(int argc, char** argv) {
 	try {
 		LavaEnv::ClassRegistry registry;
 		LavaEnv::Class* testClass;
@@ -75,7 +75,13 @@ int main(int argc, char** argv) {
 
 		result = testClass->invokeStatic<std::int32_t, std::int32_t, std::int32_t>("Add", 10, 5);
 		std::cout << result << std::endl;
+		return EXIT_SUCCESS;
 	} catch (const std::exception& e) {
 		std::cout << e.what() << std::endl;
+		return EXIT_FAILURE;
 	}
+}
+
+int main(int argc, char** argv) {
+	return lavaMain(argc, argv);
 }

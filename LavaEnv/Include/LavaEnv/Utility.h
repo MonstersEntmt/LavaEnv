@@ -18,7 +18,7 @@ namespace LavaEnv {
 	LAVA_CALL_CONV To __builtin_ub_cast(From from) { return __ub_cast<From, To>(from).m_To; }
 
 	template <class R, class... Params>
-	using FunctionPtrT = R (*)(Params...);
+	using FunctionPtrT = LAVA_CALL_CONV R (*)(Params...);
 
 	template <class R, class... Params>
 	struct FunctionPtr {
