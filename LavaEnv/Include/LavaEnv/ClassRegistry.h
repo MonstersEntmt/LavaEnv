@@ -12,6 +12,8 @@
 namespace LavaEnv {
 	class ClassRegistry {
 	public:
+		~ClassRegistry();
+
 		LAVA_CALL_CONV Class* loadClass(std::string_view id);
 
 		LAVA_CALL_CONV Class* registerClass(RegisterClass&& clazz);

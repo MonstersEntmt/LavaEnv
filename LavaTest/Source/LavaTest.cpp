@@ -3,6 +3,15 @@
 #include <iostream>
 #include <stdexcept>
 
+LAVA_CALL_CONV void testSctor(LavaEnv::Class* clazz) {
+	std::cout << "test sctor" << std::endl;
+	clazz->setStatic<std::int32_t>("A;I4", 10);
+}
+
+LAVA_CALL_CONV void testSdtor(LavaEnv::Class* clazz) {
+	std::cout << "test sdtor" << std::endl;
+}
+
 LAVA_CALL_CONV void testCtor(LavaEnv::Object* object) {
 	std::cout << "test ctor" << std::endl;
 	LavaEnv::Class& clazz = object->getClass();
@@ -38,6 +47,18 @@ LAVA_CALL_CONV int lavaMain(int argc, char** argv) {
 			registerStaticAField.m_Id    = "A;I4";
 			registerTestClass.m_Fields.push_back(registerStaticAField);
 
+			LavaEnv::RegisterMethod registerSctorMethod;
+			registerSctorMethod.m_Flags       = LavaEnv::EMethodFlag::Static;
+			registerSctorMethod.m_Id          = "_sctor;()V";
+			registerSctorMethod.m_FunctionPtr = &testSctor;
+			registerTestClass.m_Methods.push_back(registerSctorMethod);
+
+			LavaEnv::RegisterMethod registerSdtorMethod;
+			registerSdtorMethod.m_Flags       = LavaEnv::EMethodFlag::Static;
+			registerSdtorMethod.m_Id          = "_sdtor;()V";
+			registerSdtorMethod.m_FunctionPtr = &testSdtor;
+			registerTestClass.m_Methods.push_back(registerSdtorMethod);
+
 			LavaEnv::RegisterMethod registerCtorMethod;
 			registerCtorMethod.m_Id          = "_ctor;(LTest;)V";
 			registerCtorMethod.m_FunctionPtr = &testCtor;
@@ -64,7 +85,6 @@ LAVA_CALL_CONV int lavaMain(int argc, char** argv) {
 		if (!testClass)
 			throw std::runtime_error("Failed to register class!");
 
-		testClass->setStatic<std::int32_t>("A;I4", 10);
 		LavaEnv::Object* object = testClass->instantiate();
 		// object->set<std::int32_t>("a", 10);
 		std::int32_t result = object->invoke<std::int32_t>("add;(I4)I4", 5);

@@ -22,6 +22,7 @@ namespace LavaEnv {
 
 	public:
 		Class(ClassRegistry& registry);
+		~Class();
 
 		template <class R, class... Params>
 		LAVA_CALL_CONV R invokeStatic(std::string_view id, Params... args);

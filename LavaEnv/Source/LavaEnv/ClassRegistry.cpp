@@ -1,6 +1,11 @@
 #include "LavaEnv/ClassRegistry.h"
 
 namespace LavaEnv {
+	ClassRegistry::~ClassRegistry() {
+		for (auto& clazz : m_Classes)
+			delete clazz.second;
+	}
+
 	LAVA_CALL_CONV Class* ClassRegistry::loadClass(std::string_view id) {
 		for (auto classLoader : m_ClassLoaders)
 			if (classLoader->canLoadClass(id))

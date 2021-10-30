@@ -10,6 +10,12 @@ namespace LavaEnv {
 	Class::Class(ClassRegistry& registry)
 	    : m_Registry(registry), m_Size(0), m_StaticSize(0) { }
 
+	Class::~Class() {
+		auto method = getMethod("_sdtor;()V");
+		if (method)
+			method->invokeStatic<void, Class*>(this);
+	}
+
 	LAVA_CALL_CONV Object* Class::instantiate() const {
 		Object* object = reinterpret_cast<Object*>(std::malloc(getSize()));
 
@@ -17,13 +23,15 @@ namespace LavaEnv {
 		*reinterpret_cast<Class**>(object) = const_cast<Class*>(this);
 
 		auto method = getMethod("_ctor;(L" + m_Id + ";)V");
-		if (method) method->invoke<void>(object);
+		if (method)
+			method->invoke<void>(object);
 		return object;
 	}
 
 	LAVA_CALL_CONV void Class::destroy(Object* object) const {
 		auto method = getMethod("_dtor;(L" + m_Id + ";)V");
-		if (method) method->invoke<void>(object);
+		if (method)
+			method->invoke<void>(object);
 		std::free(object);
 	}
 
@@ -67,5 +75,10 @@ namespace LavaEnv {
 		}
 
 		m_StaticData.resize(m_StaticSize, 0);
+
+		// TODO(MarcasRealAccount): Add support for pointer types.
+		auto method = getMethod("_sctor;()V");
+		if (method)
+			method->invokeStatic<void, Class*>(this);
 	}
 } // namespace LavaEnv
