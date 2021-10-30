@@ -121,14 +121,16 @@ The attribute struct stores ncessary information about an attribute in the class
 
 ### **ConstantValue** Attribute
 **nameEntry** = "ConstantValue"  
-**attributeLength** = 2
+**attributeLength** = 2  
+**data**:
 
 | Type | Name | Description |
 | :---: | --- | --- |
 | **UI2** | **constantEntry** | An entry in the constant pool which stores the constant value. |
 
 ### **Code** Attribute
-**nameEntry** = "Code"
+**nameEntry** = "Code"  
+**data**:
 
 | Type | Name | Description |
 | :---: | --- | --- |
@@ -139,12 +141,25 @@ The attribute struct stores ncessary information about an attribute in the class
 
 The attributes of this code attribute can (All others are ignored) be one of the following.
 1. **[MethodRef Attribute](#methodref-attribute)**
+2. **[FieldRef Attribute](#fieldref-attribute)**
 
 ### **MethodRef** Attribute
 **nameEntry** = "MethodRef"  
-**attributeLength** = 4
+**attributeLength** = 4  
+**data**:
 
 | Type | Name | Description |
 | :---: | --- | --- |
 | **UI2** | **classEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes the id of the class this method reference goes to. |
 | **UI2** | **methodEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes the id of the method this method reference goes to. |
+
+
+### **FieldRef** Attribute
+**nameEntry** = "FieldRef"  
+**attributeLength** = 4  
+**data**:
+
+| Type | Name | Description |
+| :---: | --- | --- |
+| **UI2** | **classEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes the id of the class this field reference goes to. |
+| **UI2** | **fieldEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes the id of the method this field reference goes to. |
