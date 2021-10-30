@@ -63,52 +63,88 @@ The constant pool is a list of constant values to be used when parsing and linki
 ## Constant Pool Entry
 There are a couple of constant pool entry types, all of which start with the data below.
 
-| Offset | Type | Name | Description |
-| :---: | :---: | --- | --- |
-| **0** | **UI1** | **tag** | A tag identifier for the constant pool entry. |
+| Type | Name | Description |
+| :---: | --- | --- |
+| **UI1** | **tag** | A tag identifier for the constant pool entry. |
 
 ### **CLASS** Entry
 A Class entry describes a class.  
 **tag** = 1
 
-| Offset | Type | Name | Description |
-| :---: | :---: | --- | --- |
-| **1** | **UI2** | **nameEntry** | A **[UTF8](#utf8-entry)** entry in this constant pool which describes the name of this class entry. |
+| Type | Name | Description |
+| :---: | --- | --- |
+| **UI2** | **nameEntry** | A **[UTF8](#utf8-entry)** entry in this constant pool which describes the name of this class entry. |
 
 ### **UTF8** Entry
-A UTF8 entry describes a UTF-8 encoded string.
+A UTF8 entry describes a UTF-8 encoded string.  
 **tag** = 2
 
-| Offset | Type | Name | Description |
-| :---: | :---: | --- | --- |
-| **1** | **UI4** | **length** | The length of this UTF-8 encoded string. |
-| **5** | **UI1\[length]** | **string** | The actual string. |
+| Type | Name | Description |
+| :---: | --- | --- |
+| **UI4** | **length** | The length of this UTF-8 encoded string. |
+| **UI1\[length]** | **string** | The actual string. |
 
 ## Field
 The field struct stores necessary information about a field in the class.
 
-| Offset | Type | Name | Description |
-| :---: | :---: | --- | --- |
-| **0** | **UI2** | **flags** | Flags describing this field. |
-| **2** | **UI2** | **idEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes this field's id. |
-| **4** | **UI2** | **attributeCount** | The number of attributes in this field. |
-| **6** | **[Attribute](#attribute)\[attributeCount]** | **attibutes** | The attributes of this field. |
+| Type | Name | Description |
+| :---: | --- | --- |
+| **UI2** | **flags** | Flags describing this field. |
+| **UI2** | **idEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes this field's id. |
+| **UI2** | **attributeCount** | The number of attributes in this field. |
+| **[Attribute](#attribute)\[attributeCount]** | **attibutes** | The attributes of this field. |
+
+The attributes of this field can (All others are ignored) be one of the following.
+1. **[ConstantValue Attribute](#constantvalue-attribute)**
 
 ## Method
 The method struct stores necessary information about a method in the class.
 
-| Offset | Type | Name | Description |
-| :---: | :---: | --- | --- |
-| **0** | **UI2** | **flags** | Flags describing this field. |
-| **2** | **UI2** | **idEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes this method's id. |
-| **4** | **UI2** | **attributeCount** | The number of attributes in this method. |
-| **6** | **[Attribute](#attribute)\[attributeCount]** | **attibutes** | The attributes of this method. |
+| Type | Name | Description |
+| :---: | --- | --- |
+| **UI2** | **flags** | Flags describing this field. |
+| **UI2** | **idEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes this method's id. |
+| **UI2** | **attributeCount** | The number of attributes in this method. |
+| **[Attribute](#attribute)\[attributeCount]** | **attibutes** | The attributes of this method. |
+
+The attributes of this method can (All others are ignored) be one of the following.
+1. **[Code Attribute](#code-attribute)**
 
 ## Attribute
 The attribute struct stores ncessary information about an attribute in the class, field or method.
 
-| Offset | Type | Name | Description |
-| :---: | :---: | --- | --- |
-| **0** | **UI2** | **nameEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes this attribute's name |
-| **2** | **UI4** | **attributeLength** | The length of this attribute. |
-| **6** | **UI1\[attributeLength]** | **data** | The data of this attribute. |
+| Type | Name | Description |
+| :---: | --- | --- |
+| **UI2** | **nameEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes this attribute's name. |
+| **UI4** | **attributeLength** | The length of this attribute. |
+| **UI1\[attributeLength]** | **data** | The data of this attribute. |
+
+### **ConstantValue** Attribute
+**nameEntry** = "ConstantValue"  
+**attributeLength** = 2
+
+| Type | Name | Description |
+| :---: | --- | --- |
+| **UI2** | **constantEntry** | An entry in the constant pool which stores the constant value. |
+
+### **Code** Attribute
+**nameEntry** = "Code"
+
+| Type | Name | Description |
+| :---: | --- | --- |
+| **UI4** | **codeLength** | The length of the code in this code attribute. |
+| **UI1\[codeLength]** | **code** | The code in this code attribute. |
+| **UI2** | **attributeCount** | The number of attributes in this code attribute. |
+| **[Attribute](#attribute)\[attributeCount]** | **attributes** | The attributes of this code attribute. |
+
+The attributes of this code attribute can (All others are ignored) be one of the following.
+1. **[MethodRef Attribute](#methodref-attribute)**
+
+### **MethodRef** Attribute
+**nameEntry** = "MethodRef"  
+**attributeLength** = 4
+
+| Type | Name | Description |
+| :---: | --- | --- |
+| **UI2** | **classEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes the id of the class this method reference goes to. |
+| **UI2** | **methodEntry** | A **[UTF8](#utf8-entry)** entry in the constant pool which describes the id of the method this method reference goes to. |
